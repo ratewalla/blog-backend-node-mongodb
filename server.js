@@ -9,6 +9,7 @@ require('dotenv').config();
 // routes
 const blogRoutes = require('./routes/blog');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 // express
 const app = express();
@@ -24,6 +25,7 @@ if(process.env.NODE_ENV === 'development'){
 // routes middleware
 app.use('/api',blogRoutes);
 app.use('/api',authRoutes);
+app.use('/api',userRoutes);
 
 // mongo db connection
 mongoose.connect(process.env.DATABASE, {useUnifiedTopology:true, useNewUrlParser: true, useCreateIndex:true, useFindAndModify:false})

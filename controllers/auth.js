@@ -3,9 +3,6 @@ const shortId = require('shortid');
 const expressJWT = require('express-jwt');
 const jwt = require('jsonwebtoken');
 
-
-
-
 // user sign up
 exports.signup = (req, res) => {
 
@@ -83,3 +80,40 @@ exports.requireSignin = expressJWT({
     secret: process.env.JWT_SECRET,
     algorithms: ['HS256']
 });
+
+
+
+// Middlewares
+// checks for user
+exports.authMiddleware = (req,res,next) => {
+    const authUserId = req.user._id;
+    User.findById({_id:authUserId}).exec((err, user)=>{
+        if(err || !user){
+            return res.status(400).json({
+                error: 'User not found!'
+            });
+        }
+
+        req.profile = user;
+        next();
+    })
+};
+
+// checks if user is admin
+exports.adminMiddleware = (req,res,next) => {
+    const adminUserId = req.user._id;
+    User.findById({_id:adminUserId}).exec((err, user)=>{
+        if(err || !user){
+            return res.status(400).json({
+                error: 'User not found!'
+            });
+        }
+        if(user.role !== 'admin'){
+            return res.status(400).json({
+                error: 'Admin only! Access denied.'
+            });
+        }
+        req.profile = user;
+        next();
+    })
+};
