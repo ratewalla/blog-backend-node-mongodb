@@ -1,5 +1,7 @@
 const {check} = require('express-validator');
 
+// validation for sign up and sign in
+
 exports.userSignupValidator = [
     check('name')
     .not()
